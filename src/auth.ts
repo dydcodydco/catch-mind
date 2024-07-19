@@ -1,10 +1,8 @@
 import NextAuth from "next-auth"
 import KakaoProvider from "next-auth/providers/kakao";
+import GoogleProvider from "next-auth/providers/google";
  
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  pages: {
-    signIn: '/login',
-  },
   callbacks: {
     async jwt({ token, user }) {
       console.log(token, '----------------callback jwt token');
@@ -21,6 +19,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     KakaoProvider({
       clientId: process.env.AUTH_KAKAO_CLIENT_ID,
       clientSecret: process.env.AUTH_KAKAO_CLIENT_SECRET!
+    }),
+    GoogleProvider({
+      clientId: process.env.AUTH_GOOGLE_ID,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET!
     })
   ],
 })
