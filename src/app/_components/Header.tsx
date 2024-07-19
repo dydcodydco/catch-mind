@@ -10,7 +10,7 @@ type Props = { session: Session | null };
 
 export default function Header({ session }: Props) {
   const path = usePathname();
-  if (path === '/') {
+  if (path === '/' || path === '/login') {
     return null;
   }
   return (

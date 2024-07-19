@@ -13,10 +13,10 @@ export default function Login({session}: Props) {
       {!session?.user?.name
         ? (
           <>
-            <Button onClick={() => signIn("kakao")} className='p-3'>
+            <Button variant="outline" onClick={() => signIn("kakao")} className='p-3 bg-[#FEE500] hover:bg-[#e8db5f]'>
               카카오 로그인
             </Button>
-            <Button onClick={() => signIn("google")} className='p-3'>
+            <Button variant="outline" onClick={() => signIn("google")} className='p-3'>
               구글 로그인
             </Button>
           </>

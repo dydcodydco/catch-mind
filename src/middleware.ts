@@ -12,7 +12,7 @@ export async function middleware(request: NextRequest) {
 
   console.log(path, '--------------------middleware path');
   console.log(session?.user?.id, '--------------------middleware session id');
-  if (!session && path === '/login') {
+  if (session && path === '/login') {
     return NextResponse.redirect(new URL('/', request.url));
   }
 
