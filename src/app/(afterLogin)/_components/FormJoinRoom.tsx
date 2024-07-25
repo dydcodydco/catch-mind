@@ -33,7 +33,7 @@ const formSchema = z.object({
 
 type Props = { session: Session | null };
 
-export default function FormMakeRoom({session}: Props) {
+export default function FormJoinRoom({session}: Props) {
   const [isPrivate, setIsPrivate] = useState(false);
   const { socket, setIsModal } = useContext(socketContext);
   const router = useRouter();
@@ -51,7 +51,7 @@ export default function FormMakeRoom({session}: Props) {
     console.log(values);
     const roomData = { ...values, roomName: encodeURIComponent(values.roomName), id: session?.user?.id };
     console.log(socket);
-    socket?.emit('create room', roomData);
+    socket?.emit('join room by name', roomData);
   }, [session?.user?.id, socket]);
 
   useEffect(() => {
@@ -60,8 +60,8 @@ export default function FormMakeRoom({session}: Props) {
 
   
   useEffect(() => {
-    socket?.on('create room result', (data) => {
-      console.log(data, '------------------------------------------create room result');
+    socket?.on('join room result', (data) => {
+      console.log(data, '------------------------------------------join room result');
       if (data.result) {
         setIsModal(false);
         router.push(`/room/${data.roomId}`);
@@ -69,7 +69,7 @@ export default function FormMakeRoom({session}: Props) {
     });
 
     return () => {
-      socket?.off('create room result');
+      socket?.off('join room result');
     }
   }, [router, setIsModal, socket]);
 
@@ -141,7 +141,7 @@ export default function FormMakeRoom({session}: Props) {
             </FormItem>
           )}
         />}
-        <Button type="submit" className='w-full'>방 만들기</Button>
+        <Button type="submit" className='w-full'>방 참여하기</Button>
       </form>
     </Form>
   )
