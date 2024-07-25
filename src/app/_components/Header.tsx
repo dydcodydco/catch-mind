@@ -5,6 +5,7 @@ import Login from './Login';
 import { Session } from 'next-auth';
 import { usePathname } from 'next/navigation';
 import Logout from './Logout';
+import { Button } from '@/components/ui/button';
 
 type Props = { session: Session | null };
 
@@ -19,8 +20,8 @@ export default function Header({ session }: Props) {
         <h1 className='font-extrabold text-xl'>CATCHMIND</h1>
       </Link>
       {
-        session?.user?.id ? (
-          <Link href={'/login'}>로그인</Link>
+        !session?.user?.id ? (
+          <Link href={'/login'}><Button>로그인</Button></Link>
         ) : (
           <Logout />
         )
