@@ -18,9 +18,11 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 import { Label } from '@radix-ui/react-label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { socketContext } from './SocketProvider';
+import { Session } from 'next-auth';
+import { useRouter } from 'next/navigation';
 
 const formSchema = z.object({
-  roomname: z.string().min(2).max(10, {
+  roomName: z.string().min(2).max(10, {
     message: '방 이름은 2글자 이상 10글자 이하입니다'
   }),
   password: z.string().optional(),
@@ -29,14 +31,17 @@ const formSchema = z.object({
   }),
 })
 
-export default function FormMakeRoom() {
+type Props = { session: Session | null };
+
+export default function FormMakeRoom({session}: Props) {
   const [isPrivate, setIsPrivate] = useState(false);
   const { socket } = useContext(socketContext);
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      roomname: "",
+      roomName: "",
       password: '',
       type: 'open',
     },
@@ -44,16 +49,33 @@ export default function FormMakeRoom() {
 
   const onSubmit = useCallback((values: z.infer<typeof formSchema>) => {
     console.log(values);
-    socket?.emit('room-make', values);
-  }, [socket]);
+    const roomData = { ...values, roomName: encodeURIComponent(values.roomName), id: session?.user?.id };
+    console.log(socket);
+    socket?.emit('create-room', roomData);
+  }, [session?.user?.id, socket]);
 
   useEffect(() => {
     form.setValue('password', '');
   }, [form, isPrivate]);
 
+  
+  useEffect(() => {
+    socket?.on('create-room-result', (data) => {
+      console.log(data, '------------------------------------------create-room-result');
+      if (data.result) {
+        router.back();
+        router.replace(`/room/${data.roomId}`);
+      }
+    });
+
+    return () => {
+      socket?.off('create-room-result');
+    }
+  }, [router, socket]);
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 flex flex-col flex-grow">
 
         <FormField
           control={form.control}
@@ -94,9 +116,9 @@ export default function FormMakeRoom() {
 
         <FormField
           control={form.control}
-          name="roomname"
+          name="roomName"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className='flex-grow'>
               <FormLabel>방 이름</FormLabel>
               <FormControl>
                 <Input placeholder="방 이름" {...field} />
@@ -119,7 +141,7 @@ export default function FormMakeRoom() {
             </FormItem>
           )}
         />}
-        <Button type="submit">Submit</Button>
+        <Button type="submit" className='w-full'>방 만들기</Button>
       </form>
     </Form>
   )
