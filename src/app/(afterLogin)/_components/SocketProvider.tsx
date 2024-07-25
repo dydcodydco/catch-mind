@@ -11,13 +11,17 @@ interface ISocketProps {
   disconnect: Function;
   goDown: boolean;
   setGoDown: Function;
+  isModal: boolean;
+  setIsModal: Function;
 }
 
 export const socketContext = createContext<ISocketProps>({
   socket: null,
   disconnect: () => { },
   goDown: false,
-  setGoDown: () => {},
+  setGoDown: () => { },
+  isModal: true,
+  setIsModal: () => {},
 });
 
 
@@ -25,13 +29,14 @@ export const socketContext = createContext<ISocketProps>({
 export default function SocketProvider({ children, session }: Props) {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [goDown, setGoDown] = useState(false);
+  const [isModal, setIsModal] = useState(true);
   const disconnect = useCallback(() => {
     socket?.disconnect();
     setSocket(null);
   }, [socket]);
   const contextValue = useMemo(() => {
-    return { socket, disconnect, goDown, setGoDown }
-  }, [goDown, socket, disconnect]);
+    return { socket, disconnect, goDown, setGoDown, isModal, setIsModal }
+  }, [socket, disconnect, goDown, isModal]);
 
   useEffect(() => {
     console.log(socket, '--------------------------------------------------------socket???');

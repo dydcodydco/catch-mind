@@ -35,7 +35,7 @@ type Props = { session: Session | null };
 
 export default function FormMakeRoom({session}: Props) {
   const [isPrivate, setIsPrivate] = useState(false);
-  const { socket } = useContext(socketContext);
+  const { socket, setIsModal } = useContext(socketContext);
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -63,15 +63,15 @@ export default function FormMakeRoom({session}: Props) {
     socket?.on('create-room-result', (data) => {
       console.log(data, '------------------------------------------create-room-result');
       if (data.result) {
-        router.back();
-        router.replace(`/room/${data.roomId}`);
+        setIsModal(false);
+        router.push(`/room/${data.roomId}`);
       }
     });
 
     return () => {
       socket?.off('create-room-result');
     }
-  }, [router, socket]);
+  }, [router, setIsModal, socket]);
 
   return (
     <Form {...form}>
