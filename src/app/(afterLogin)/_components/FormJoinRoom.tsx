@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { useCallback, useContext, useEffect, useState } from 'react';
-import { Label } from '@radix-ui/react-label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { socketContext } from './SocketProvider';
 import { Session } from 'next-auth';
@@ -46,6 +45,10 @@ export default function FormJoinRoom({session}: Props) {
       type: 'open',
     },
   });
+
+  useEffect(() => {
+    form.setFocus('roomName');
+  }, [form]);
 
   const onSubmit = useCallback((values: z.infer<typeof formSchema>) => {
     console.log(values);

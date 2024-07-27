@@ -58,6 +58,9 @@ export default function FormMakeRoom({session}: Props) {
     form.setValue('password', '');
   }, [form, isPrivate]);
 
+  useEffect(() => {
+    form.setFocus('roomName')
+  }, [form])
   
   useEffect(() => {
     socket?.on('create room result', (data) => {
