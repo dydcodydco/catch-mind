@@ -34,7 +34,7 @@ export default function Canvas() {
 
     return () => {
       newCanvas?.dispose();
-      socket?.disconnect();
+      // socket?.disconnect();
       // const canvasElement = document.getElementById('canvas');
       // canvasElement?.parentNode?.removeChild(canvasElement);
     };

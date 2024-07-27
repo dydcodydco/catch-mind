@@ -75,6 +75,13 @@ export default function SocketProvider({ children, session }: Props) {
     // }
   }, [session?.user?.id, socket]);
 
+  useEffect(() => {
+    return () => {
+      console.log('----------------------------------------------- socket.disconnect');
+      socket?.disconnect();
+    }
+  }, [])
+
   return (
     <socketContext.Provider value={contextValue}>
       {children}
