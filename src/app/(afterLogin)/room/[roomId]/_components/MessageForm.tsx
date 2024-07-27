@@ -37,7 +37,7 @@ export default function MessageForm({session}: Props) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className='flex items-stretch border-black border-2 border-solid'>
-      <TextareaAutosize className='flex-grow outline-none' {...register('content', { required: '내용을 입력해주세요.' })} onKeyDown={onKeyDown} />
+      <TextareaAutosize className='flex-grow outline-none min-h-[38px]' {...register('content', { required: '내용을 입력해주세요.' })} onKeyDown={onKeyDown} />
       <Button className='rounded-none h-auto' disabled={!isValid || !socket || !session?.user?.id}>입력</Button>
     </form>
   )

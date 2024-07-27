@@ -15,7 +15,7 @@ export default function Header({ session }: Props) {
     return null;
   }
   return (
-    <div className='flex justify-between p-2 items-stretch'>
+    <div className='flex justify-between p-2 items-stretch relative z-10'>
       <Link href='/' className='flex items-center mr-auto'>
         <h1 className='font-extrabold text-xl'>CATCHMIND</h1>
       </Link>
